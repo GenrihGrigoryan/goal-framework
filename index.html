@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фреймворк сопровождения к цели</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Переменные цветов --- */
+        :root {
+            --bg-color: #e6f1f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --accent-color: #3628b3;
+            --secondary-color: #e6e6e6;
+        }
+
+        /* --- Базовые настройки --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            /* Отступ снизу, чтобы контент не перекрывался кнопкой */
+            padding-bottom: 100px;
+        }
+
+        /* Ограничитель ширины (Контейнер) */
+        .container {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* --- Блок 1: Заголовок --- */
+        .hero {
+            text-align: left;
+            margin-bottom: 48px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+        }
+
+        /* --- Блок 2: Карточки --- */
+        .features-grid {
+            display: grid;
+            /* Адаптивная сетка: автозаполнение колонок */
+            grid-template-columns: repeat(2, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Эффект при наведении */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(54, 40, 179, 0.1);
+        }
+
+        /* Кружок с номером */
+        .card-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0px;
+            color: var(--accent-color);
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #303030;
+        }
+
+        /* --- Блок 3: FAQ (Вопросы) --- */
+        .faq-section {
+            margin: 0 auto;
+        }
+
+        .faq-section h2 {
+            text-align: left;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .unselectable{
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .faq-item {
+            background-color: var(--card-bg);
+            margin-bottom: 15px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        details {
+            padding: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        details[open] {
+            background-color: #fff;
+        }
+
+        summary {
+            list-style: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Убираем стандартный треугольник summary */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* Кастомный значок плюса */
+        summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: 300;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            margin-top: 15px;
+            color: #555;
+            font-size: 0.95rem;
+            padding-top: 10px;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* --- Закрепленная кнопка --- */
+        .sticky-btn-wrapper {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none; /* Чтобы контейнер не перекрывал клики по бокам */
+        }
+
+        .cta-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 25px rgba(54, 40, 179, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            pointer-events: auto; /* Возвращаем кликабельность кнопке */
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(54, 40, 179, 0.6);
+        }
+
+        /* --- Анимация появления --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Адаптивность для мобильных --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 40px 16px;
+            }
+            .cta-btn {
+                width: 90%;
+                text-align: center;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header class="hero">
+            <h1>Фреймворк сопровождения к цели</h1>
+            <p>Метод, который поможет за месяц добиться значимой цели — запустить проект, устроиться на работу, сделать карьерный шаг или наконец завершить то, что давно откладывалось.</p>
+        </header>
+
+
+        <h2>События</h2>
+        <p>Помощь в преодолении трудностей и сопротивления</p>
+        <br>
+        <section class="features-grid">
+            <div class="card">
+                <h3>Брейншторм по цели</h3>
+                <p>Определяемся с желаемым результатом и строим план достижения, включающий ключевые и регулярные действия.</p>
+            </div>
+
+            <div class="card">
+                <h3>8 бадди коворкинг сессий</h3>
+                <p>Встречаемся, для того чтобы сделать ключевое действие. Не закончим, пока дело не будет сделано.</p>
+            </div>
+
+            <div class="card">
+                <h3>2 недели спринт отчетов</h3>
+                <p>Ежедневно спрашиваю вас о выполнении регулярных действий.</p>
+            </div>
+
+            <div class="card">
+                <h3>4 Week Review</h3>
+                <p>Раз в неделю встречаемся для обсуждения выполненных задач и возникших трудностей.</p>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Вопросы</h2>
+            
+            <div class="faq-item unselectable">
+                <details>
+                    <summary>Цель наверняка будет достигнута?</summary>
+                    <div class="faq-answer">
+                        <b>Нет.</b> Так как взаимодействие предполагает приложение вашей воли, я не могу гарантировать результат. Но я могу гарантировать применение методов, которые доказали свою эффективность как на личном опыте, так и в <a href="https://www.researchgate.net/publication/395526867_You_Are_Not_Alone_Designing_Body_Doubling_for_ADHD_in_Virtual_Reality">исследованиях</a>.
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item unselectable">
+                <details>
+                    <summary>Какие цели подходят?</summary>
+                    <div class="faq-answer">
+                        Цель должна быть реалистично достижима за месяц, а также быть доступной для декомпозиции и анализа с моей стороны (то есть понятной для меня). Также, она должна быть подходящей в качестве кейса в портфолио.
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item unselectable">
+                <details>
+                    <summary>Это саморазвитие или тренинг?</summary>
+                    <div class="faq-answer">
+                        <b>Нет.</b> Фреймворк поможет вам механически совершить нужные действия при помощи стресса, ответственности и трезвой поддержки со стороны. Это не предполагает оценку ваших целей на соответствие долгосрочным целям и ценностям, а также не предполагает того, что вы по результатам взаимодействия как-то изменитесь.
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item unselectable">
+                <details>
+                    <summary>Что такое "ключевые" и "регулярные" действия?</summary>
+                    <div class="faq-answer">
+                        Фреймворк исходит из того, что любую достижимую цель можно разбить либо на серию действий, которые нужно совершить (например, если речь идет о разработке приложения), либо на регулярные рутины, выполнение которых приближает к цели (например, каждый день рассылать свою резюме), либо и то и другое. Как правило, у человека нет проблем с пониманием того, что нужно сделать, но он сталкивается с трудностями при попытке выполнении этих действий. Эту проблему и решает фреймворк.
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item unselectable">
+                <details>
+                    <summary>Что нужно чтобы участвовать?</summary>
+                    <div class="faq-answer">
+                        Вам нужно написать мне в Телеграм, мы обсудим детали и запланируем звонок, посвященный брейншторму вашей цели. После достижения вашей цели, я буду ожидать видео-отзыв о нашем взаимодействии, чтобы использовать его в качестве кейса моего портфолио.
+                    </div>
+                </details>
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="sticky-btn-wrapper">
+        <a href="https://t.me/genrihgrigoryan" class="cta-btn">Связаться</a>
+    </div>
+
+</body>
+</html>
